@@ -1,0 +1,138 @@
+{
+  "extensionName": {
+    "message": "リンクル",
+    "description": "拡張機能の名前"
+  },
+  "extensionDescription": {
+    "message": "ウェブページから特定のリンクを収集してコピーする拡張機能",
+    "description": "拡張機能の説明"
+  },
+  "filterSettings": {
+    "message": "フィルター設定",
+    "description": "フィルター設定セクションのヘッダー"
+  },
+  "selectFilterInstruction": {
+    "message": "以下からフィルター方法を選択してください：",
+    "description": "フィルター方法選択の説明テキスト"
+  },
+  "filterByDomain": {
+    "message": "ドメインで絞り込み",
+    "description": "ドメインでリンクをフィルターするオプション"
+  },
+  "filterByText": {
+    "message": "リンクテキストで絞り込み",
+    "description": "テキスト内容でリンクをフィルターするオプション"
+  },
+  "filterByUrl": {
+    "message": "URL パターンで絞り込み",
+    "description": "URLパターンでリンクをフィルターするオプション"
+  },
+  "filterByRegex": {
+    "message": "正規表現で絞り込み",
+    "description": "正規表現でリンクをフィルターするオプション"
+  },
+  "placeholderDomain": {
+    "message": "例: github.com",
+    "description": "ドメインフィルターのプレースホルダーテキスト"
+  },
+  "placeholderText": {
+    "message": "例: ダウンロード",
+    "description": "テキストフィルターのプレースホルダーテキスト"
+  },
+  "placeholderUrl": {
+    "message": "例: /download/",
+    "description": "URLパターンフィルターのプレースホルダーテキスト"
+  },
+  "placeholderRegex": {
+    "message": "例: \\.pdf$",
+    "description": "正規表現フィルターのプレースホルダーテキスト"
+  },
+  "selectFilterFirst": {
+    "message": "まずフィルター方法を選択してください",
+    "description": "フィルター方法が選択されていない時のプレースホルダーテキスト"
+  },
+  "regexHelpText": {
+    "message": "例: <code>\\.pdf$</code> (PDFファイル), <code>github\\.com.*\\/releases\\/</code> (GitHubリリース)",
+    "description": "正規表現の例のヘルプテキスト"
+  },
+  "scanLinks": {
+    "message": "リンクをスキャン",
+    "description": "リンクをスキャンするボタンのテキスト"
+  },
+  "copySelected": {
+    "message": "選択したリンクをコピー",
+    "description": "選択したリンクをコピーするボタンのテキスト"
+  },
+  "copyAll": {
+    "message": "すべてコピー",
+    "description": "すべてのリンクをコピーするボタンのテキスト"
+  },
+  "clearResults": {
+    "message": "クリア",
+    "description": "結果リストをクリアするボタンのテキスト"
+  },
+  "linksFound": {
+    "message": "$count$個のリンクが見つかりました",
+    "description": "見つかったリンク数を表示するステータスメッセージ",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "noLinksFound": {
+    "message": "リンクが見つかりませんでした",
+    "description": "リンクが見つからない時のステータスメッセージ"
+  },
+  "selectLinks": {
+    "message": "リンクを選択してください",
+    "description": "リンクが選択されていない時のエラーメッセージ"
+  },
+  "linksCopied": {
+    "message": "$count$個のリンクをコピーしました",
+    "description": "コピーしたリンク数を表示する成功メッセージ",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "allLinksCopied": {
+    "message": "$count$個のリンクをすべてコピーしました",
+    "description": "すべてのリンクをコピーした時の成功メッセージ",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "noLinksToaCopy": {
+    "message": "コピーするリンクがありません",
+    "description": "コピーするリンクがない時のエラーメッセージ"
+  },
+  "copyFailed": {
+    "message": "コピーに失敗しました",
+    "description": "コピー操作が失敗した時のエラーメッセージ"
+  },
+  "errorOccurred": {
+    "message": "エラーが発生しました",
+    "description": "一般的なエラーメッセージ"
+  },
+  "regexError": {
+    "message": "エラー: $error$",
+    "description": "正規表現エラーのメッセージ",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "正規表現が無効です"
+      }
+    }
+  },
+  "invalidRegexError": {
+    "message": "正規表現が無効です",
+    "description": "正規表現パターンが無効な時のエラーメッセージ"
+  }
+}

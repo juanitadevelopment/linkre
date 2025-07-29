@@ -1,0 +1,8 @@
+<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="8" cy="8" r="7.5" fill="#4285f4"/>
+  
+  <!-- Simplified target -->
+  <circle cx="8" cy="8" r="5" fill="none" stroke="white" stroke-width="1.5"/>
+  <circle cx="8" cy="8" r="2.5" fill="white"/>
+</svg>

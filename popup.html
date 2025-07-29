@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .section {
+      margin-bottom: 15px;
+    }
+    
+    .section h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+    
+    .instruction {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    
+    .filter-type {
+      margin-bottom: 10px;
+    }
+    
+    .filter-type label {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+    
+    .filter-type input[type="radio"] {
+      margin-right: 8px;
+    }
+    
+    button {
+      background: #4285f4;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      margin-right: 8px;
+    }
+    
+    button:hover {
+      background: #3367d6;
+    }
+    
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    
+    #results {
+      margin-top: 15px;
+      padding: 10px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    
+    .link-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 11px;
+    }
+    
+    .link-item input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    
+    .link-url {
+      color: #666;
+      text-decoration: none;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+</head>
+<body>
+  <div class="section">
+    <h3 data-i18n="filterSettings">Filter Settings</h3>
+    <div class="instruction" data-i18n="selectFilterInstruction">Please select a filter type below:</div>
+    
+    <div class="filter-type">
+      <label>
+        <input type="radio" name="filterType" value="domain">
+        <span data-i18n="filterByDomain">Filter by domain</span>
+      </label>
+      <label>
+        <input type="radio" name="filterType" value="text">
+        <span data-i18n="filterByText">Filter by link text</span>
+      </label>
+      <label>
+        <input type="radio" name="filterType" value="url">
+        <span data-i18n="filterByUrl">Filter by URL pattern</span>
+      </label>
+      <label>
+        <input type="radio" name="filterType" value="regex">
+        <span data-i18n="filterByRegex">Filter by regular expression</span>
+      </label>
+    </div>
+    
+    <input type="text" id="filterInput" disabled data-i18n-placeholder="selectFilterFirst">
+    <div id="regexHelp" style="display: none; font-size: 11px; color: #666; margin-top: 5px;" data-i18n-html="regexHelpText">
+      Examples: <code>\.pdf$</code> (PDF files), <code>github\.com.*\/releases\/</code> (GitHub releases)
+    </div>
+  </div>
+  
+  <div class="section">
+    <button id="scanBtn" disabled data-i18n="scanLinks">Scan Links</button>
+    <button id="copyBtn" disabled data-i18n="copySelected">Copy Selected</button>
+    <button id="copyAllBtn" disabled data-i18n="copyAll">Copy All</button>
+    <button id="clearBtn" disabled data-i18n="clearResults">Clear</button>
+  </div>
+  
+  <div id="results"></div>
+  <div id="status"></div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

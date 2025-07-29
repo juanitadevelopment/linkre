@@ -1,0 +1,13 @@
+/* Linkre - Link highlight styles */
+.linkre-highlight {
+  background-color: #fff3cd !important;
+  border: 2px solid #ffc107 !important;
+  border-radius: 3px !important;
+  box-shadow: 0 0 5px rgba(255, 193, 7, 0.5) !important;
+  transition: all 0.3s ease !important;
+}
+
+.linkre-highlight:hover {
+  background-color: #ffeaa7 !important;
+  transform: scale(1.02) !important;
+}

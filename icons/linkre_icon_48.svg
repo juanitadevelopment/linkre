@@ -1,0 +1,17 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="22" fill="#4285f4"/>
+  
+  <!-- Target icon -->
+  <circle cx="24" cy="24" r="14" fill="none" stroke="white" stroke-width="3"/>
+  <circle cx="24" cy="24" r="8" fill="none" stroke="white" stroke-width="2"/>
+  <circle cx="24" cy="24" r="4" fill="white"/>
+  
+  <!-- Corner links (simplified) -->
+  <g fill="none" stroke="white" stroke-width="2" opacity="0.7">
+    <ellipse cx="12" cy="8" rx="3" ry="2" transform="rotate(45 12 8)"/>
+    <ellipse cx="40" cy="24" rx="3" ry="2" transform="rotate(-45 40 24)"/>
+    <ellipse cx="24" cy="40" rx="3" ry="2" transform="rotate(45 24 40)"/>
+    <ellipse cx="8" cy="24" rx="3" ry="2" transform="rotate(-45 8 24)"/>
+  </g>
+</svg>

@@ -1,0 +1,138 @@
+{
+  "extensionName": {
+    "message": "Linkre",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Collect and copy specific links from web pages using various filters",
+    "description": "Description of the extension"
+  },
+  "filterSettings": {
+    "message": "Filter Settings",
+    "description": "Header for filter configuration section"
+  },
+  "selectFilterInstruction": {
+    "message": "Please select a filter type below:",
+    "description": "Instruction text for selecting filter type"
+  },
+  "filterByDomain": {
+    "message": "Filter by domain",
+    "description": "Option to filter links by domain"
+  },
+  "filterByText": {
+    "message": "Filter by link text",
+    "description": "Option to filter links by text content"
+  },
+  "filterByUrl": {
+    "message": "Filter by URL pattern",
+    "description": "Option to filter links by URL pattern"
+  },
+  "filterByRegex": {
+    "message": "Filter by regular expression",
+    "description": "Option to filter links by regex"
+  },
+  "placeholderDomain": {
+    "message": "e.g., github.com",
+    "description": "Placeholder text for domain filter"
+  },
+  "placeholderText": {
+    "message": "e.g., download",
+    "description": "Placeholder text for text filter"
+  },
+  "placeholderUrl": {
+    "message": "e.g., /download/",
+    "description": "Placeholder text for URL pattern filter"
+  },
+  "placeholderRegex": {
+    "message": "e.g., \\.pdf$",
+    "description": "Placeholder text for regex filter"
+  },
+  "selectFilterFirst": {
+    "message": "Select a filter type first",
+    "description": "Placeholder text when no filter type is selected"
+  },
+  "regexHelpText": {
+    "message": "Examples: <code>\\.pdf$</code> (PDF files), <code>github\\.com.*\\/releases\\/</code> (GitHub releases)",
+    "description": "Help text for regex examples"
+  },
+  "scanLinks": {
+    "message": "Scan Links",
+    "description": "Button text to scan for links"
+  },
+  "copySelected": {
+    "message": "Copy Selected",
+    "description": "Button text to copy selected links"
+  },
+  "copyAll": {
+    "message": "Copy All",
+    "description": "Button text to copy all links"
+  },
+  "clearResults": {
+    "message": "Clear",
+    "description": "Button text to clear the results list"
+  },
+  "linksFound": {
+    "message": "$count$ links found",
+    "description": "Status message showing number of links found",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "noLinksFound": {
+    "message": "No links found",
+    "description": "Status message when no links are found"
+  },
+  "selectLinks": {
+    "message": "Please select links to copy",
+    "description": "Error message when no links are selected"
+  },
+  "linksCopied": {
+    "message": "$count$ links copied",
+    "description": "Success message showing number of links copied",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "3"
+      }
+    }
+  },
+  "allLinksCopied": {
+    "message": "All $count$ links copied",
+    "description": "Success message when all links are copied",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "noLinksToaCopy": {
+    "message": "No links to copy",
+    "description": "Error message when there are no links to copy"
+  },
+  "copyFailed": {
+    "message": "Failed to copy",
+    "description": "Error message when copy operation fails"
+  },
+  "errorOccurred": {
+    "message": "An error occurred",
+    "description": "Generic error message"
+  },
+  "regexError": {
+    "message": "Error: $error$",
+    "description": "Error message for regex errors",
+    "placeholders": {
+      "error": {
+        "content": "$1",
+        "example": "Invalid regular expression"
+      }
+    }
+  },
+  "invalidRegexError": {
+    "message": "Invalid regular expression",
+    "description": "Error message when regex pattern is invalid"
+  }
+}
