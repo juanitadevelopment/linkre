@@ -6,32 +6,54 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse({links: links});
     } catch (error) {
       console.error('Error scanning links:', error);
-      sendResponse({error: chrome.i18n.getMessage('invalidRegexError')});
+      const errorMessage = error.message || chrome.i18n.getMessage('invalidRegexError');
+      sendResponse({error: errorMessage});
     }
   }
+  return true; // Keep message channel open for async response
 });
 
-// Scan links on the current page
+// Scan links on the current page with performance optimization
 function scanLinksOnPage(filterType, filterValue) {
   const allLinks = document.querySelectorAll('a[href]');
   const filteredLinks = [];
+  const MAX_LINKS = 10000; // Performance limit from specification
   
-  allLinks.forEach(link => {
-    const url = link.href;
-    const text = link.textContent.trim();
-    
-    // Convert relative URLs to absolute URLs
-    const absoluteUrl = new URL(url, window.location.href).href;
-    
-    // Check filter conditions
-    if (shouldIncludeLink(absoluteUrl, text, filterType, filterValue)) {
-      filteredLinks.push({
-        url: absoluteUrl,
-        text: text,
-        element: link
-      });
+  let processedCount = 0;
+  
+  for (const link of allLinks) {
+    if (processedCount >= MAX_LINKS) {
+      console.warn(`Link scanning stopped at ${MAX_LINKS} links for performance`);
+      break;
     }
-  });
+    
+    try {
+      const url = link.href;
+      const text = link.textContent.trim();
+      
+      // Skip invalid or empty URLs
+      if (!url || url === '#' || url.startsWith('javascript:')) {
+        continue;
+      }
+      
+      // Convert relative URLs to absolute URLs
+      const absoluteUrl = new URL(url, window.location.href).href;
+      
+      // Check filter conditions
+      if (shouldIncludeLink(absoluteUrl, text, filterType, filterValue)) {
+        filteredLinks.push({
+          url: absoluteUrl,
+          text: text || absoluteUrl,
+          element: link
+        });
+      }
+      
+      processedCount++;
+    } catch (error) {
+      console.warn('Error processing link:', link.href, error);
+      continue;
+    }
+  }
   
   return filteredLinks;
 }
@@ -39,36 +61,41 @@ function scanLinksOnPage(filterType, filterValue) {
 // Check if link matches filter conditions
 function shouldIncludeLink(url, text, filterType, filterValue) {
   // Include all links if filter value is empty
-  if (!filterValue) {
+  if (!filterValue || !filterValue.trim()) {
     return true;
   }
   
+  const trimmedValue = filterValue.trim();
+  
   try {
-    const urlObj = new URL(url);
-    
     switch (filterType) {
       case 'domain':
-        return urlObj.hostname.includes(filterValue.toLowerCase());
+        const urlObj = new URL(url);
+        return urlObj.hostname.toLowerCase().includes(trimmedValue.toLowerCase());
         
       case 'text':
-        return text.toLowerCase().includes(filterValue.toLowerCase());
+        return text.toLowerCase().includes(trimmedValue.toLowerCase());
         
       case 'url':
-        return url.toLowerCase().includes(filterValue.toLowerCase());
+        return url.toLowerCase().includes(trimmedValue.toLowerCase());
         
       case 'regex':
         try {
-          const regex = new RegExp(filterValue, 'i');
+          const regex = new RegExp(trimmedValue, 'i');
           return regex.test(url);
         } catch (regexError) {
-          throw new Error(chrome.i18n.getMessage('invalidRegexError'));
+          throw new Error(`Invalid regular expression: ${regexError.message}`);
         }
         
       default:
+        console.warn('Unknown filter type:', filterType);
         return true;
     }
   } catch (error) {
-    console.error('URL parsing error:', error);
+    if (error.message.includes('Invalid regular expression')) {
+      throw error; // Re-throw regex errors
+    }
+    console.error('URL processing error:', error);
     return false;
   }
 }
