@@ -31,65 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // プレースホルダー更新
-  function updatePlaceholder(filterType) {
-    const placeholderKeys = {
-      'domain': 'placeholderDomain',
-      'text': 'placeholderText',
-      'url': 'placeholderUrl',
-      'regex': 'placeholderRegex',
-      '': 'selectFilterFirst'
-    };
-    
-    const key = placeholderKeys[filterType];
-    if (key) {
-      filterInput.placeholder = chrome.i18n.getMessage(key);
-    }
-  }
-  
-  // ボタン状態を更新する関数
-  function updateButtonStates(hasResults) {
-    console.log('Updating button states, hasResults:', hasResults); // デバッグ用
-    
-    const copyBtnElement = document.getElementById('copyBtn');
-    const copyAllBtnElement = document.getElementById('copyAllBtn');
-    const clearBtnElement = document.getElementById('clearBtn');
-    
-    if (copyBtnElement) {
-      copyBtnElement.disabled = !hasResults;
-      console.log('Copy button disabled:', copyBtnElement.disabled); // デバッグ用
-    }
-    if (copyAllBtnElement) {
-      copyAllBtnElement.disabled = !hasResults;
-      console.log('Copy all button disabled:', copyAllBtnElement.disabled); // デバッグ用
-    }
-    if (clearBtnElement) {
-      clearBtnElement.disabled = !hasResults;
-      console.log('Clear button disabled:', clearBtnElement.disabled); // デバッグ用
-    }
-  }
-  
-  // リストクリア機能を独立した関数に
-  function clearResults() {
-    currentLinks = [];
-    
-    // DOM要素を再取得して確実にクリア
-    const resultsElement = document.getElementById('results');
-    const statusElement = document.getElementById('status');
-    
-    if (resultsElement) {
-      resultsElement.innerHTML = '';
-    }
-    if (statusElement) {
-      statusElement.innerHTML = '';
-    }
-    
-    // ボタン状態を更新
-    updateButtonStates(false);
-    
-    console.log('Results cleared'); // デバッグ用
-  }
-  
   // 国際化テキストを設定
   localizeUI();
   
@@ -108,26 +49,19 @@ document.addEventListener('DOMContentLoaded', function() {
         regexHelp.style.display = 'none';
       }
       
-      // 国際化UI設定
-  function localizeUI() {
-    // data-i18n属性を持つ要素のテキストを設定
-    document.querySelectorAll('[data-i18n]').forEach(element => {
-      const messageKey = element.getAttribute('data-i18n');
-      element.textContent = chrome.i18n.getMessage(messageKey);
+      // フィルター入力フィールドを有効化
+      filterInput.disabled = false;
+      
+      // スキャンボタンを有効化
+      const scanBtnElement = document.getElementById('scanBtn');
+      if (scanBtnElement) {
+        scanBtnElement.disabled = false;
+      }
+      
+      // 設定を保存
+      saveSettings();
     });
-    
-    // HTMLコンテンツを含む要素を設定
-    document.querySelectorAll('[data-i18n-html]').forEach(element => {
-      const messageKey = element.getAttribute('data-i18n-html');
-      element.innerHTML = chrome.i18n.getMessage(messageKey);
-    });
-    
-    // プレースホルダーを設定
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-      const messageKey = element.getAttribute('data-i18n-placeholder');
-      element.placeholder = chrome.i18n.getMessage(messageKey);
-    });
-  }
+  });
   
   // プレースホルダー更新
   function updatePlaceholder(filterType) {
@@ -135,7 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
       'domain': 'placeholderDomain',
       'text': 'placeholderText',
       'url': 'placeholderUrl',
-      'regex': 'placeholderRegex'
+      'regex': 'placeholderRegex',
+      '': 'selectFilterFirst'
     };
     
     const key = placeholderKeys[filterType];
@@ -143,17 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
       filterInput.placeholder = chrome.i18n.getMessage(key);
     }
   }
-  
-  // リストをクリア
-  clearBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    console.log('Clear button clicked'); // デバッグ用
-    
-    // 強制的にリストをクリア
-    clearResults();
-  });
   
   // ボタン状態を更新する関数
   function updateButtonStates(hasResults) {
@@ -176,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function clearResults() {
     currentLinks = [];
     
-    // DOM要素を再取得して確実にクリア
     const resultsElement = document.getElementById('results');
     const statusElement = document.getElementById('status');
     
@@ -187,15 +110,14 @@ document.addEventListener('DOMContentLoaded', function() {
       statusElement.innerHTML = '';
     }
     
-    // ボタン状態を更新
     updateButtonStates(false);
-    
-    console.log('Results cleared'); // デバッグ用
   }
   
-  // 設定を保存
-      saveSettings();
-    });
+  // リストをクリア
+  clearBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    clearResults();
   });
   
   // フィルター入力値が変更された時に設定を保存
@@ -207,58 +129,53 @@ document.addEventListener('DOMContentLoaded', function() {
   scanBtn.addEventListener('click', async function() {
     try {
       const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
-      const filterType = document.querySelector('input[name="filterType"]:checked').value;
+      const filterType = document.querySelector('input[name="filterType"]:checked')?.value;
       const filterValue = filterInput.value.trim();
       
-      // コンテンツスクリプトにメッセージを送信
+      if (!filterType) {
+        showStatus(chrome.i18n.getMessage('selectFilterFirst'), 'error');
+        return;
+      }
+      
       const response = await chrome.tabs.sendMessage(tab.id, {
         action: 'scanLinks',
         filterType: filterType,
         filterValue: filterValue
       });
       
-      if (response && response.links) {
-        currentLinks = response.links;
-        displayLinks(currentLinks);
-        updateButtonStates(true);
-        showStatus(chrome.i18n.getMessage('linksFound', [currentLinks.length.toString()]), 'success');
-      } else if (response && response.error) {
-        currentLinks = [];
-        const resultsElement = document.getElementById('results');
-        if (resultsElement) resultsElement.innerHTML = '';
-        updateButtonStates(false);
-        showStatus(chrome.i18n.getMessage('regexError', [response.error]), 'error');
-      } else {
-        currentLinks = [];
-        const resultsElement = document.getElementById('results');
-        if (resultsElement) resultsElement.innerHTML = '';
-        updateButtonStates(false);
-        showStatus(chrome.i18n.getMessage('noLinksFound'), 'error');
-      }
+      handleScanResponse(response);
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Scan error:', error);
       showStatus(chrome.i18n.getMessage('errorOccurred'), 'error');
     }
   });
   
+  // スキャン結果を処理
+  function handleScanResponse(response) {
+    if (response && response.links && response.links.length > 0) {
+      currentLinks = response.links;
+      displayLinks(currentLinks);
+      updateButtonStates(true);
+      showStatus(chrome.i18n.getMessage('linksFound', [currentLinks.length.toString()]), 'success');
+    } else if (response && response.error) {
+      clearResults();
+      showStatus(chrome.i18n.getMessage('regexError', [response.error]), 'error');
+    } else {
+      clearResults();
+      showStatus(chrome.i18n.getMessage('noLinksFound'), 'error');
+    }
+  }
+  
   // 選択したリンクをクリップボードにコピー
   copyBtn.addEventListener('click', function() {
-    const selectedLinks = Array.from(document.querySelectorAll('.link-item input[type="checkbox"]:checked'))
-      .map(checkbox => checkbox.dataset.url);
+    const selectedLinks = getSelectedLinks();
     
     if (selectedLinks.length === 0) {
       showStatus(chrome.i18n.getMessage('selectLinks'), 'error');
       return;
     }
     
-    const linkText = selectedLinks.join('\n');
-    
-    navigator.clipboard.writeText(linkText).then(() => {
-      showStatus(chrome.i18n.getMessage('linksCopied', [selectedLinks.length.toString()]), 'success');
-    }).catch(err => {
-      console.error('Copy failed:', err);
-      showStatus(chrome.i18n.getMessage('copyFailed'), 'error');
-    });
+    copyToClipboard(selectedLinks, selectedLinks.length);
   });
   
   // すべてのリンクを一括コピー
@@ -269,15 +186,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     const allUrls = currentLinks.map(link => link.url);
-    const linkText = allUrls.join('\n');
-    
-    navigator.clipboard.writeText(linkText).then(() => {
-      showStatus(chrome.i18n.getMessage('allLinksCopied', [allUrls.length.toString()]), 'success');
-    }).catch(err => {
-      console.error('Copy failed:', err);
-      showStatus(chrome.i18n.getMessage('copyFailed'), 'error');
-    });
+    copyToClipboard(allUrls, allUrls.length, true);
   });
+  
+  // 選択されたリンクを取得
+  function getSelectedLinks() {
+    return Array.from(document.querySelectorAll('.link-item input[type="checkbox"]:checked'))
+      .map(checkbox => checkbox.dataset.url);
+  }
+  
+  // クリップボードにコピー
+  async function copyToClipboard(links, count, isAll = false) {
+    try {
+      const linkText = links.join('\n');
+      await navigator.clipboard.writeText(linkText);
+      
+      const messageKey = isAll ? 'allLinksCopied' : 'linksCopied';
+      showStatus(chrome.i18n.getMessage(messageKey, [count.toString()]), 'success');
+    } catch (error) {
+      console.error('Copy failed:', error);
+      showStatus(chrome.i18n.getMessage('copyFailed'), 'error');
+    }
+  }
   
   // 設定を保存
   function saveSettings() {
@@ -327,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
   
-  // リンクを表示
+  // リンクを表示 (パフォーマンス最適化版)
   function displayLinks(links) {
     const resultsElement = document.getElementById('results');
     if (!resultsElement) return;
@@ -339,19 +269,59 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     
-    links.forEach((link, index) => {
-      const linkItem = document.createElement('div');
-      linkItem.className = 'link-item';
+    // 大量のリンクの場合はバッチ処理
+    const BATCH_SIZE = 100;
+    const MAX_DISPLAY_LINKS = 1000;
+    
+    const linksToDisplay = links.slice(0, MAX_DISPLAY_LINKS);
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < linksToDisplay.length; i += BATCH_SIZE) {
+      const batch = linksToDisplay.slice(i, i + BATCH_SIZE);
       
-      linkItem.innerHTML = `
-        <input type="checkbox" id="link-${index}" data-url="${link.url}" checked>
-        <label for="link-${index}" class="link-url" title="${link.url}">
-          ${link.text || link.url}
-        </label>
-      `;
-      
-      resultsElement.appendChild(linkItem);
-    });
+      setTimeout(() => {
+        const batchFragment = document.createDocumentFragment();
+        
+        batch.forEach((link, batchIndex) => {
+          const actualIndex = i + batchIndex;
+          const linkItem = createLinkElement(link, actualIndex);
+          batchFragment.appendChild(linkItem);
+        });
+        
+        resultsElement.appendChild(batchFragment);
+      }, 0);
+    }
+    
+    // 表示制限を超えた場合の通知
+    if (links.length > MAX_DISPLAY_LINKS) {
+      const limitMessage = document.createElement('p');
+      limitMessage.className = 'limit-message';
+      limitMessage.textContent = `Showing first ${MAX_DISPLAY_LINKS} of ${links.length} links`;
+      resultsElement.appendChild(limitMessage);
+    }
+  }
+  
+  // リンク要素を作成
+  function createLinkElement(link, index) {
+    const linkItem = document.createElement('div');
+    linkItem.className = 'link-item';
+    
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = `link-${index}`;
+    checkbox.dataset.url = link.url;
+    checkbox.checked = true;
+    
+    const label = document.createElement('label');
+    label.htmlFor = `link-${index}`;
+    label.className = 'link-url';
+    label.title = link.url;
+    label.textContent = link.text || link.url;
+    
+    linkItem.appendChild(checkbox);
+    linkItem.appendChild(label);
+    
+    return linkItem;
   }
   
   // ステータス表示
