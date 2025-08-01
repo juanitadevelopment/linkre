@@ -2,6 +2,42 @@
 
 All notable changes to Linkre will be documented in this file.
 
+## [1.0.1] - 2025-08-01
+
+### Added
+- **CLAUDE.md**: Comprehensive development guide for Claude Code integration
+- **SPECIFICATION.md**: Detailed technical specifications and requirements in Japanese
+- Performance limit notifications for large link counts
+- Enhanced error messages with more specific regex validation
+
+### Changed
+- **Performance Improvements**: 
+  - Batched rendering (100 links per batch) to prevent UI freezing
+  - Display limit of 1000 links with overflow notification
+  - Link processing limit of 10,000 for optimal performance
+  - Optimized DOM manipulation using DocumentFragment
+- **Code Quality**:
+  - Removed duplicate functions in popup.js
+  - Improved function modularity and reusability
+  - Enhanced error handling consistency across components
+  - Better input validation and sanitization
+- **UI Enhancements**:
+  - Added CSS performance optimizations for large lists
+  - Improved status messaging and user feedback
+  - Better visual indicators for processing limits
+
+### Fixed
+- Duplicate code elimination in popup.js (lines 112-145)
+- URL validation to skip dangerous links (javascript:, empty URLs)
+- Memory leaks with large link processing
+- Inconsistent error handling across different components
+
+### Technical
+- Enhanced content script with better error recovery
+- Improved async/await error handling patterns
+- Added proper URL validation and edge case handling
+- Performance CSS optimizations with `contain: layout style`
+
 ## [1.0.0] - 2025-07-29
 
 ### Added
