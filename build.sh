@@ -5,7 +5,7 @@
 
 set -e
 
-VERSION="1.0.0"
+VERSION="1.0.1"
 OUTPUT_FILE="linkre-v${VERSION}.zip"
 
 echo "🔨 Building Linkre Chrome Extension v${VERSION}"
